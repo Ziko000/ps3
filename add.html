@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>لوحة إدارة ألعاب PS3 | شركة الربيع</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#00205c;--orange:#ec5b1a;--bg:#f4f6fb;--card:#fff;--ink:#10182b;--muted:#5d6783;--line:#e2e7f2;--ok:#17a35b;--bad:#c0392b}
+@media (prefers-color-scheme: dark){:root{--bg:#0b1226;--card:#121b36;--ink:#eef1fa;--muted:#9aa6c6;--line:#222d52}}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Cairo",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;padding:0 0 60px}
+header{background:var(--navy);color:#fff;padding:14px 0}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:10px}
+header h1{margin:0;font-size:19px}
+header a{color:#ffb28a;font-size:14px}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+.status{display:inline-block;padding:2px 12px;border-radius:999px;font-size:13px;font-weight:700;background:rgba(255,255,255,.15)}
+.status.ok{background:var(--ok)}
+.tabs{display:flex;gap:8px;margin:16px 0}
+.tabs button{flex:1;padding:10px 4px;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;font:700 15px Cairo,sans-serif;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--orange);border-color:var(--orange);color:#fff}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px}
+.box h2{margin:0 0 6px;font-size:18px}
+.box p.h{margin:0 0 12px;color:var(--muted);font-size:14px}
+label{display:block;font-weight:700;margin:12px 0 4px;font-size:14px}
+input[type=text],input[type=password],input[type=number],input[type=search],textarea,select{width:100%;padding:11px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:16px Cairo,sans-serif}
+textarea{min-height:70px;resize:vertical}
+.row{display:flex;flex-wrap:wrap;gap:10px 18px}
+.row label{display:flex;align-items:center;gap:6px;margin:0;font-weight:600}
+.row input{width:18px;height:18px;accent-color:var(--orange)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid2 small{display:block;color:var(--muted);font-weight:600}
+.btn{border:0;border-radius:10px;padding:12px 20px;font:700 16px Cairo,sans-serif;cursor:pointer;background:var(--navy);color:#fff}
+.btn.o{background:var(--orange)}
+.btn.g{background:#25a35a}
+.btn.s{padding:6px 12px;font-size:14px}
+.btn.r{background:var(--bad)}
+.btn.n{background:var(--muted)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.msg{margin-top:10px;font-size:14px;font-weight:600}
+.msg.ok{color:var(--ok)}.msg.bad{color:var(--bad)}
+.pv{width:90px;aspect-ratio:3/4;object-fit:cover;border-radius:8px;background:var(--line);flex:none}
+.m{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:8px;margin:8px 0}
+.m .i{flex:1;min-width:0}
+.m .i small{color:var(--muted);display:block;direction:ltr;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.m.no{border-color:var(--bad)}.m.yes{border-color:var(--ok)}
+.li{border-bottom:1px solid var(--line);padding:10px 0}
+.li .t{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.li .t b{direction:auto}
+.li .p{color:var(--muted);font-size:13px;margin:2px 0 6px;direction:rtl}
+.li .a{display:flex;gap:6px;flex-wrap:wrap}
+.badge{background:var(--bad);color:#fff;font-size:12px;padding:0 8px;border-radius:999px}
+.edit-bar{background:rgba(236,91,26,.12);border:1.5px dashed var(--orange);border-radius:10px;padding:8px 12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+details summary{cursor:pointer;font-weight:700}
+ol.steps{margin:8px 0 0;padding-inline-start:20px}
+ol.steps li{margin:4px 0}
+code{background:var(--bg);padding:1px 6px;border-radius:6px;direction:ltr;display:inline-block}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>لوحة إدارة ألعاب PS3</h1><span><span class="status" id="st">غير متصل</span> <a href="index.html">الموقع ←</a></span></div></header>
+
+<div class="wrap">
+
+  <div class="box" id="nogames" hidden style="margin-top:16px;border-color:var(--bad)">
+    <b style="color:var(--bad)">⚠️ اللوحة مفتوحة بشكل غلط</b>
+    <p class="h" style="margin:6px 0 0">افتحها من رابط الموقع نفسه (اللي بيبدأ بـ <code>https://</code>) مش من ملف على الجهاز.</p>
+  </div>
+
+  <!-- ===== الربط ===== -->
+  <div class="box" style="margin-top:16px">
+    <details id="det">
+      <summary>🔑 ربط اللوحة بالموقع (مرة واحدة بس)</summary>
+      <p class="h" style="margin-top:8px">المفتاح بيتحفظ على جهازك أنت بس، ومحدش يقدر يعدّل في الموقع من غيره. ما تبعتوش لأي حد.</p>
+      <ol class="steps">
+        <li>افتح <code>github.com/settings/personal-access-tokens/new</code></li>
+        <li>اكتب اسم للمفتاح، واختار أطول مدة، وفي <b>Repository access</b> اختار <b>Only select repositories</b> وحدد ريبو الموقع.</li>
+        <li>في <b>Permissions</b> ضيف <b>Contents</b> وخليها <b>Read and write</b>.</li>
+        <li>اضغط Generate، وانسخ المفتاح والصقه تحت.</li>
+      </ol>
+      <label for="tk">المفتاح (Token)</label>
+      <input type="password" id="tk" autocomplete="off" dir="ltr" placeholder="github_pat_...">
+      <label for="rp">اسم الريبو (صاحب الحساب/الاسم)</label>
+      <input type="text" id="rp" dir="ltr" placeholder="ziko000/ps3">
+      <div style="margin-top:12px"><button class="btn o" id="conn">حفظ واختبار الاتصال</button></div>
+      <div id="cm" class="msg"></div>
+    </details>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" id="t1" aria-selected="true">➕ إضافة / تعديل</button>
+    <button role="tab" id="t3" aria-selected="false">📋 الألعاب</button>
+    <button role="tab" id="t2" aria-selected="false">🖼️ بوسترات</button>
+  </div>
+
+  <!-- ===== إضافة / تعديل ===== -->
+  <section id="p1">
+    <div class="box">
+      <div class="edit-bar" id="editBar" hidden><span>بتعدّل: <b id="editName"></b></span><button class="btn s n" id="cancelEdit">إلغاء التعديل</button></div>
+      <h2 id="formTitle">بيانات اللعبة</h2>
+      <label for="n">اسم اللعبة (بالإنجليزي)</label>
+      <input type="text" id="n" placeholder="مثال: Elden Ring" dir="ltr" style="text-align:right">
+      <label for="c">التصنيف</label>
+      <select id="c"></select>
+
+      <label for="p3">السعر بالجنيه (اختياري — لو سبته فاضي هيظهر «السعر عند الفرع»)</label>
+      <input type="number" inputmode="numeric" min="0" id="p3">
+
+      <label>طريقة اللعب</label>
+      <div class="row">
+        <label><input type="checkbox" id="mS" checked> فردي</label>
+        <label><input type="checkbox" id="mL"> زوجي (نفس الجهاز)</label>
+        <label><input type="checkbox" id="mO"> أونلاين</label>
+      </div>
+      <label>علامات</label>
+      <div class="row">
+        <label><input type="checkbox" id="fk"> للأطفال</label>
+        <label><input type="checkbox" id="fa"> قوائم عربي</label>
+        <label><input type="checkbox" id="fx"> غير متاحة حالياً</label>
+      </div>
+      <label for="tg">كلمة قصيرة تظهر على الكارت (اختياري، مثال: بدون الداتا)</label>
+      <input type="text" id="tg">
+      <label for="nt">ملاحظة تظهر في التفاصيل (اختياري)</label>
+      <input type="text" id="nt">
+      <label for="u">رابط فيديو أو صفحة تفاصيل اللعبة (اختياري)</label>
+      <input type="text" id="u" dir="ltr" style="text-align:right" placeholder="https://www.youtube.com/watch?v=...">
+      <label for="i">فكرة اللعبة (اختياري)</label>
+      <textarea id="i" placeholder="جملة أو اتنين عن اللي بتعمله في اللعبة"></textarea>
+      <label for="s">نبذة عن اللعبة (اختياري)</label>
+      <textarea id="s" placeholder="مين صنعها وقصتها باختصار"></textarea>
+      <label for="pf">صورة اللعبة (اختياري)</label>
+      <input type="file" id="pf" accept="image/*">
+      <div id="pv1" style="margin-top:8px" hidden><img class="pv" id="pvImg" alt=""></div>
+      <details style="margin-top:12px"><summary>إعدادات متقدمة</summary>
+        <label for="id">اسم ملف الصورة (بيتكتب لوحده)</label>
+        <input type="text" id="id" dir="ltr" style="text-align:right">
+      </details>
+      <div id="warn" class="msg bad" hidden></div>
+      <div style="margin-top:16px"><button class="btn g" id="pub" style="width:100%;font-size:18px">🚀 نشر في الموقع</button></div>
+      <div id="m1" class="msg"></div>
+    </div>
+  </section>
+
+  <!-- ===== الألعاب ===== -->
+  <section id="p3" hidden>
+    <div class="box">
+      <h2>كل الألعاب في الموقع</h2>
+      <p class="h">من هنا تعدّل السعر، أو تخلّي اللعبة «غير متاحة»، أو تحذفها.</p>
+      <input type="search" id="lq" placeholder="ابحث عن لعبة…">
+      <div id="lst" style="margin-top:8px">…</div>
+      <div id="lm" class="msg"></div>
+    </div>
+  </section>
+
+  <!-- ===== بوسترات ===== -->
+  <section id="p2" hidden>
+    <div class="box">
+      <h2>ارفع بوسترات كتير مرة واحدة</h2>
+      <p class="h">اختار الصور (حتى لو أسماءها مختلفة). الأداة بتطابق كل صورة مع لعبتها، وانت بتصحّح اللي غلط، وبعدين تضغط رفع.</p>
+      <input type="file" id="mf" accept="image/*" multiple>
+      <div id="ml"></div>
+      <div style="margin-top:12px">
+        <button class="btn g" id="up" disabled>🚀 ارفع للموقع</button>
+        <button class="btn" id="zip" disabled>نزّل ZIP بدل الرفع</button>
+      </div>
+      <div id="zm" class="msg"></div>
+    </div>
+  </section>
+</div>
+
+<script src="jszip.min.js"></script>
+<script src="games.js"></script>
+<script>
+var CATS={ac:"أكشن ومغامرة",sh:"تصويب وحرب",rc:"سباقات",sp:"رياضة",ft:"قتال ومصارعة",hr:"رعب",kd:"أطفال وعائلة",rp:"تقمص أدوار",pz:"ألغاز ومنصات",sm:"محاكاة وإدارة",rt:"كلاسيك (PS1/PS2)",ot:"اشتراكات"};
+var DATA="games.js";
+function $(i){return document.getElementById(i)}
+function slug(n){return String(n).toLowerCase().replace(/'/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+var ALL=(window.GAMES||[]).slice();
+ALL.forEach(function(g,i){g.id=g.id||slug(g.n)||("game-"+i)});
+if(typeof window.GAMES==="undefined")$("nogames").hidden=false;
+
+/* ====== الربط بـ GitHub ====== */
+var cfg={token:"",repo:"",branch:"main"};
+function lsGet(k){try{return localStorage.getItem(k)||""}catch(e){return ""}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function defRepo(){var h=location.hostname,p=location.pathname.split("/")[1]||"";
+  if(/\.github\.io$/.test(h)&&p&&!/\.html$/.test(p))return h.split(".")[0]+"/"+p;return "ziko000/ps3"}
+cfg.token=lsGet("rbps3_tk");cfg.repo=lsGet("rbps3_rp")||defRepo();cfg.branch=lsGet("rbps3_br")||"main";
+$("tk").value=cfg.token;$("rp").value=cfg.repo;
+function setSt(ok){var s=$("st");s.textContent=ok?"متصل ✓":"غير متصل";s.className="status"+(ok?" ok":"")}
+function need(){if(!cfg.token){$("det").open=true;$("cm").className="msg bad";$("cm").textContent="اربط اللوحة بالمفتاح الأول.";window.scrollTo(0,0);return false}return true}
+function gh(method,path,body){
+  return fetch("https://api.github.com/repos/"+cfg.repo+path,{method:method,
+    headers:{"Authorization":"Bearer "+cfg.token,"Accept":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28","Content-Type":"application/json"},
+    body:body?JSON.stringify(body):undefined}).then(function(r){
+      return r.text().then(function(t){var j=null;try{j=JSON.parse(t)}catch(e){}
+        if(!r.ok){var e=new Error((j&&j.message)||("خطأ "+r.status));e.status=r.status;throw e}return j})});
+}
+function errT(e){
+  if(e.status===0)return e.message;
+  if(e.status===401)return "المفتاح غلط أو منتهي. اعمل مفتاح جديد.";
+  if(e.status===403||e.status===404)return "مفيش صلاحية على الريبو. تأكد من اسم الريبو وإن المفتاح عليه Contents: Read and write.";
+  if(e.status===409||e.status===422)return "حصل تعارض، حاول تاني.";
+  return (e.message||"فشل الاتصال")+" — اتأكد من النت.";
+}
+$("conn").onclick=function(){
+  cfg.token=$("tk").value.trim();cfg.repo=$("rp").value.trim().replace(/^https?:\/\/github\.com\//,"");
+  var m=$("cm");m.className="msg";m.textContent="بجرّب الاتصال…";
+  fetch("https://api.github.com/repos/"+cfg.repo,{headers:{"Authorization":"Bearer "+cfg.token,"Accept":"application/vnd.github+json"}})
+    .then(function(r){return r.json().then(function(j){if(!r.ok){var e=new Error(j.message);e.status=r.status;throw e}return j})})
+    .then(function(j){
+      if(j.permissions&&!j.permissions.push)throw Object.assign(new Error("لا يوجد صلاحية كتابة"),{status:403});
+      cfg.branch=j.default_branch||"main";lsSet("rbps3_tk",cfg.token);lsSet("rbps3_rp",cfg.repo);lsSet("rbps3_br",cfg.branch);
+      setSt(true);m.className="msg ok";m.textContent="تم الربط ✓";$("det").open=false;
+    }).catch(function(e){setSt(false);m.className="msg bad";m.textContent=errT(e)});
+};
+if(cfg.token)setSt(true);else $("det").open=true;
+
+/* ====== ملفات GitHub ====== */
+function b64utf8(t){return btoa(unescape(encodeURIComponent(t)))}
+function fromB64(c){return decodeURIComponent(escape(atob(c.replace(/\n/g,""))))}
+function getFile(path){return gh("GET","/contents/"+path+"?ref="+encodeURIComponent(cfg.branch)+"&t="+Date.now())}
+function putFile(path,b64,msg,sha){var b={message:msg,content:b64,branch:cfg.branch};if(sha)b.sha=sha;return gh("PUT","/contents/"+path,b)}
+function putSafe(path,b64,msg){return getFile(path).then(function(f){return f.sha},function(e){if(e.status===404)return null;throw e}).then(function(sha){return putFile(path,b64,msg,sha)})}
+function blobB64(b){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){res(String(r.result).split(",")[1])};r.onerror=rej;r.readAsDataURL(b)})}
+
+/* قراءة وكتابة قايمة الألعاب (games.js) */
+function parseGames(t){
+  t=t.replace(/\/\*[\s\S]*?\*\//g,"");
+  var a=t.indexOf("["),b=t.lastIndexOf("]");if(a<0||b<a)throw new Error("ملف الألعاب شكله غلط");
+  var inner=t.slice(a+1,b).trim().replace(/,\s*$/,"");
+  return inner?JSON.parse("["+inner+"]"):[];
+}
+function buildGames(arr){return "window.GAMES = [\n"+arr.map(function(g){return JSON.stringify(g)}).join(",\n")+"\n];\n"}
+function editData(fn,msg){
+  function once(){return getFile(DATA).then(function(f){
+    var arr=fn(parseGames(fromB64(f.content)));
+    return putFile(DATA,b64utf8(buildGames(arr)),msg,f.sha).then(function(){return arr})})}
+  return once().catch(function(e){if(e.status===409||e.status===422)return once();throw e});
+}
+
+/* تحويل الصورة لـ JPG 600x800 */
+function toJpg(file){
+  return new Promise(function(res,rej){
+    var url=URL.createObjectURL(file),im=new Image();
+    im.onload=function(){var W=600,H=800,c=document.createElement("canvas");c.width=W;c.height=H;
+      var x=c.getContext("2d");x.fillStyle="#00205c";x.fillRect(0,0,W,H);
+      var r=Math.max(W/im.width,H/im.height),w=im.width*r,h=im.height*r;x.drawImage(im,(W-w)/2,(H-h)/2,w,h);
+      c.toBlob(function(b){URL.revokeObjectURL(url);b?res(b):rej()},"image/jpeg",.85)};
+    im.onerror=function(){URL.revokeObjectURL(url);rej()};im.src=url});
+}
+function save(blob,name){var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},2000)}
+
+/* تابات */
+function tab(n){["1","2","3"].forEach(function(k){$("p"+k).hidden=(k!==n);$("t"+k).setAttribute("aria-selected",k===n)});if(n==="3")loadList()}
+$("t1").onclick=function(){tab("1")};$("t2").onclick=function(){tab("2")};$("t3").onclick=function(){tab("3")};
+
+/* ===== إضافة / تعديل ===== */
+$("c").innerHTML=Object.keys(CATS).map(function(k){return '<option value="'+k+'">'+CATS[k]+'</option>'}).join("");
+var idEdited=false,editing=null,editOld=null;
+$("id").addEventListener("input",function(){idEdited=true});
+$("n").addEventListener("input",function(){if(!idEdited&&!editing)$("id").value=slug($("n").value)});
+$("pf").addEventListener("change",function(){var f=this.files[0];if(!f){$("pv1").hidden=true;return}$("pvImg").src=URL.createObjectURL(f);$("pv1").hidden=false});
+function lineObj(){
+  var m=($("mS").checked?"S":"")+($("mL").checked?"L":"")+($("mO").checked?"O":"");
+  var o={id:$("id").value.trim()||slug($("n").value),n:$("n").value.trim(),c:$("c").value,m:m||"S",i:$("i").value.trim(),s:$("s").value.trim()};
+  var v=parseInt($("p3").value,10);var pr={"3":{G:v>0?v:0}};
+  o.pr=pr;
+  if($("tg").value.trim())o.tag=$("tg").value.trim();
+  if($("nt").value.trim())o.note=$("nt").value.trim();
+  var uu=$("u").value.trim();if(uu&&/^https?:\/\//i.test(uu))o.u=uu;
+  if($("fk").checked)o.k=true;if($("fa").checked)o.a=true;if($("fx").checked)o.x=true;
+  if(editOld){["g","r","p"].forEach(function(k){if(editOld[k])o[k]=editOld[k]})}
+  return o;
+}
+function clearForm(){
+  ["n","i","s","id","tg","nt","u","p3"].forEach(function(k){$(k).value=""});
+  ["mL","mO","fk","fa","fx"].forEach(function(k){$(k).checked=false});$("mS").checked=true;
+  $("pf").value="";$("pv1").hidden=true;$("c").selectedIndex=0;idEdited=false;
+  editing=null;editOld=null;$("editBar").hidden=true;$("id").readOnly=false;$("formTitle").textContent="بيانات اللعبة";$("pub").textContent="🚀 نشر في الموقع";
+}
+function fillForm(g){
+  clearForm();editing=g.id;editOld=g;
+  $("n").value=g.n||"";$("c").value=g.c||"ac";$("id").value=g.id;$("id").readOnly=true;
+  $("i").value=g.i||"";$("s").value=g.s||"";$("tg").value=g.tag||"";$("nt").value=g.note||"";$("u").value=g.u||"";
+  var m=g.m||"S";$("mS").checked=m.indexOf("S")>-1;$("mL").checked=m.indexOf("L")>-1;$("mO").checked=m.indexOf("O")>-1;
+  $("fk").checked=!!g.k;$("fa").checked=!!g.a;$("fx").checked=!!g.x;
+  var pr=g.pr||{};$("p3").value=(pr["3"]||{}).G||"";
+  $("editBar").hidden=false;$("editName").textContent=g.n;$("formTitle").textContent="تعديل اللعبة";$("pub").textContent="💾 حفظ التعديل";
+  tab("1");window.scrollTo(0,0);
+}
+$("cancelEdit").onclick=clearForm;
+$("pub").onclick=function(){
+  var m=$("m1"),w=$("warn");w.hidden=true;m.className="msg";m.textContent="";
+  if(!need())return;
+  var o=lineObj();
+  if(!o.n){w.hidden=false;w.textContent="اكتب اسم اللعبة.";return}
+  if(!o.id){w.hidden=false;w.textContent="اكتب اسم اللعبة بحروف إنجليزي.";return}
+  if($("u").value.trim()&&!o.u){w.hidden=false;w.textContent="الرابط لازم يبدأ بـ https://";return}
+  var b=$("pub"),isEdit=!!editing;b.disabled=true;m.textContent=isEdit?"بحفظ التعديل…":"بنشر اللعبة…";
+  editData(function(arr){
+    var i=arr.findIndex(function(g){return g.id===o.id});
+    if(isEdit){if(i<0)arr.push(o);else arr[i]=o}
+    else{if(i>-1)throw Object.assign(new Error("اللعبة دي موجودة بالفعل (نفس اسم الملف). غيّر الاسم."),{status:0});arr.push(o)}
+    return arr;
+  },(isEdit?"تعديل: ":"إضافة: ")+o.n).then(function(arr){
+    ALL=arr;
+    var f=$("pf").files[0];if(!f)return;m.textContent="برفع الصورة…";
+    return toJpg(f).then(blobB64).then(function(x){return putSafe("images/"+o.id+".jpg",x,"بوستر: "+o.n)});
+  }).then(function(){
+    m.className="msg ok";m.textContent=(isEdit?"اتحفظ التعديل ✓":"اتنشرت ✓")+" هتظهر في الموقع خلال دقيقة أو اتنين (حدّث الصفحة).";
+    clearForm();
+  }).catch(function(e){m.className="msg bad";m.textContent=errT(e)}).then(function(){b.disabled=false});
+};
+
+/* ===== قايمة الألعاب ===== */
+var listData=[];
+function priceLine(g){var x=(g.pr||{})["3"];return x&&x.G>0?x.G+" جنيه":"السعر عند الفرع"}
+function renderList(){
+  var q=$("lq").value.trim().toLowerCase(),el=$("lst");
+  var rows=listData.filter(function(g){return !q||(g.n||"").toLowerCase().indexOf(q)>-1});
+  el.innerHTML=rows.length?rows.map(function(g){
+    return '<div class="li"><div class="t"><b>'+esc(g.n)+'</b>'+(g.x?'<span class="badge">غير متاحة</span>':'')+'</div>'+
+      '<div class="p">'+esc(priceLine(g))+'</div><div class="a">'+
+      '<button class="btn s o" data-a="edit" data-id="'+esc(g.id)+'">✏️ تعديل</button>'+
+      '<button class="btn s n" data-a="tog" data-id="'+esc(g.id)+'">'+(g.x?'خليها متاحة':'خليها غير متاحة')+'</button>'+
+      '<button class="btn s r" data-a="del" data-id="'+esc(g.id)+'">حذف</button></div></div>'}).join(""):"مفيش نتائج.";
+}
+function loadList(){
+  var el=$("lst");
+  if(!cfg.token){el.textContent="اربط اللوحة بالمفتاح الأول لعرض القايمة.";return}
+  el.textContent="بحمّل…";
+  getFile(DATA).then(function(f){listData=parseGames(fromB64(f.content));ALL=listData.slice();renderList()}).catch(function(e){el.textContent=errT(e)});
+}
+$("lq").addEventListener("input",renderList);
+$("lst").addEventListener("click",function(e){
+  var b=e.target.closest("button[data-a]");if(!b)return;
+  var id=b.dataset.id,a=b.dataset.a,m=$("lm"),g=listData.filter(function(x){return x.id===id})[0];
+  if(a==="edit"){if(g)fillForm(g);return}
+  m.className="msg";
+  if(a==="tog"){
+    m.textContent="بحفظ…";
+    editData(function(arr){return arr.map(function(x){if(x.id===id){x=Object.assign({},x);if(x.x)delete x.x;else x.x=true}return x})},"تغيير التوفر: "+id)
+      .then(function(arr){listData=arr;renderList();m.className="msg ok";m.textContent="اتحفظ ✓ (هيظهر في الموقع خلال دقيقة أو اتنين)"}).catch(function(er){m.className="msg bad";m.textContent=errT(er)});
+  }
+  if(a==="del"){
+    if(!confirm("متأكد إنك عايز تحذف اللعبة دي من الموقع؟"))return;
+    m.textContent="بحذف…";
+    editData(function(arr){return arr.filter(function(x){return x.id!==id})},"حذف لعبة: "+id)
+      .then(function(arr){listData=arr;renderList();
+        return getFile("images/"+id+".jpg").then(function(f){return gh("DELETE","/contents/images/"+id+".jpg",{message:"حذف بوستر: "+id,sha:f.sha,branch:cfg.branch})},function(){})})
+      .then(function(){m.className="msg ok";m.textContent="اتحذفت ✓"}).catch(function(er){m.className="msg bad";m.textContent=errT(er)});
+  }
+});
+
+/* ===== بوسترات كتير ===== */
+function norm(s){return String(s).toLowerCase().replace(/\.[a-z0-9]+$/,"").replace(/[^a-z0-9؀-ۿ]+/g," ").replace(/\b(ps4|ps5|cover|poster|box|art|boxart|playstation|4)\b/g," ").replace(/\s+/g," ").trim()}
+function match(fn){
+  var f=norm(fn);if(!f)return null;var best=null,sc=0,ft=f.split(" ");
+  ALL.forEach(function(g){var n=norm(g.n||""),s=0;
+    if(n===f)s=100;else if(n&&(n.indexOf(f)>-1||f.indexOf(n)>-1))s=60+Math.min(n.length,f.length);
+    else{var nt=n.split(" "),c=0;ft.forEach(function(t){if(t.length>1&&nt.indexOf(t)>-1)c++});s=(c/Math.max(nt.length,ft.length))*50}
+    if(s>sc){sc=s;best=g}});
+  return sc>=35?best:null;
+}
+var items=[];
+function optsHTML(){return '<option value="">— اختار اللعبة —</option>'+ALL.slice().sort(function(a,b){return (a.n||"").localeCompare(b.n||"")}).map(function(g){return '<option value="'+esc(g.id)+'">'+esc(g.n||g.id)+'</option>'}).join("")}
+$("mf").addEventListener("change",function(){
+  items=[...this.files].map(function(f){var g=match(f.name);return {f:f,id:g?g.id:"",url:URL.createObjectURL(f)}});renderM()});
+function renderM(){
+  var o=optsHTML();
+  $("ml").innerHTML=items.map(function(it){return '<div class="m '+(it.id?"yes":"no")+'"><img class="pv" src="'+it.url+'" alt=""><div class="i"><small>'+esc(it.f.name)+'</small><select>'+o+'</select></div></div>'}).join("");
+  [...$("ml").querySelectorAll("select")].forEach(function(s,k){s.value=items[k].id;s.onchange=function(){items[k].id=s.value;s.closest(".m").className="m "+(s.value?"yes":"no");upd()}});upd();
+}
+function upd(){var ok=items.filter(function(i){return i.id}).length;$("zip").disabled=$("up").disabled=!ok;$("zm").className="msg";$("zm").textContent=items.length?(ok+" من "+items.length+" صورة جاهزة"):""}
+$("up").onclick=function(){
+  if(!need())return;
+  var list=items.filter(function(i){return i.id}),seen={},n=0,fail=0,z=$("zm");
+  $("up").disabled=$("zip").disabled=true;
+  list.reduce(function(p,it){return p.then(function(){
+    if(seen[it.id])return;seen[it.id]=1;z.className="msg";z.textContent="برفع "+(n+1)+" من "+list.length+"…";
+    return toJpg(it.f).then(blobB64).then(function(x){return putSafe("images/"+it.id+".jpg",x,"بوستر: "+it.id)}).then(function(){n++},function(e){fail++;if(e.status===401||e.status===403)throw e});
+  })},Promise.resolve()).then(function(){
+    z.className="msg "+(fail?"bad":"ok");z.textContent="اترفع "+n+" بوستر"+(fail?" وفشل "+fail:" ✓")+" — هتظهر في الموقع خلال دقيقة أو اتنين.";
+  }).catch(function(e){z.className="msg bad";z.textContent=errT(e)}).then(function(){$("zip").disabled=$("up").disabled=!items.some(function(i){return i.id})});
+};
+$("zip").onclick=function(){
+  var list=items.filter(function(i){return i.id}),seen={},z=$("zm");z.textContent="بجهّز الصور…";
+  var zp=new JSZip();
+  Promise.all(list.map(function(it){return toJpg(it.f).then(function(b){if(!seen[it.id]){seen[it.id]=1;zp.file(it.id+".jpg",b)}},function(){})}))
+    .then(function(){return zp.generateAsync({type:"blob"})}).then(function(b){save(b,"posters.zip");z.className="msg ok";z.textContent="تم ✓"});
+};
+</script>
+</body>
+</html>
